@@ -1,0 +1,143 @@
+<html>
+<head>
+    <title>Session</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            text-align:center;
+        }
+
+        img{
+
+            width:50%;
+        }
+        .info{
+
+            font-size:220%
+        }
+
+        h1{
+            margin-top:20px;
+            font-size: 300%;
+            color:hotpink;
+        }
+
+
+        input{
+            margin-top: 10px;
+            text-align: center;
+            display:block;
+            margin-left:10%;
+            border-radius: 5px;
+            border-style: solid;
+            border-color: lightsteelblue;
+            margin-bottom: 10px;
+            
+        }
+        .username{
+            background-color: bisque;
+            width: 80%;
+            height: 80px;
+            font-size: 40px;
+        }
+        .message{
+
+            background-color: gainsboro;
+            width:80%;
+            height:200px;
+            font-size:40px;
+        }
+
+        button{
+
+            width:50%;
+            height:50px;
+            background-color: hotpink;
+            font-size: 40px;
+        }
+
+        .msg-text{
+            font-size:xx-large
+        }
+
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script>
+        console.log("connecting client...")
+        let socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // function sendMessage(event){
+
+        //     console.log("sending form...")
+        //     event.preventDefault();
+
+
+        // }
+
+        socket.on('connect' , function(){
+
+            socket.emit('my event' , { data:'connection established'})
+
+            console.log("addding event listener...")
+            let form = document.querySelector('#myform')
+            //form.addEventListener('submit', sendMessage)
+
+
+            form.onsubmit = function(e){
+                e.preventDefault()
+                console.log("Submit!")
+
+                let username = document.querySelector('.username').value
+                let message = document.querySelector('.message').value
+                socket.emit('my event' , { username: username, message: message})
+
+                document.querySelector('.message').value = ''
+            }
+
+        })
+
+        socket.on('my response' , function(msg){
+            console.log(msg.username)
+
+            if (typeof msg.username !== 'undefined'){
+
+                new_msg = "<p class='msg-text'> <span style='font-weight:bold'> "+msg.username + "</span> : " + msg.message + "</p>"
+
+                message_container = document.querySelector('.message_holder')
+                message_container.innerHTML += new_msg
+                message_container.style.visibility = "visible"
+
+
+            }
+
+
+
+
+
+        })
+
+    </script>
+
+    
+
+</head>
+<body>
+    <h1>Chat up!</h1>
+    <img src="https://media.giphy.com/media/26FPJGjhefSJuaRhu/giphy.gif">
+    <p class="info"> Enter your message:</p>
+
+    <form id="myform" action="" method="POST" >
+        <input type="text" class="username" placeholder="Name"/>
+        <input type="text" class="message" placeholder="Message"/>
+        <button type="submit">Send</button>
+  </form>
+
+  <hr>
+  <div class="message_holder" style="visibility: hidden;"></div>
+</body>
+
+
+
+
+</html>
