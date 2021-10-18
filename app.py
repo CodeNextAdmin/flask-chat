@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 sense = SenseHat()
 
-app.config['SECRET_KEY'] = SOCKET-IO-SECRET #CHANGE TO YOUR OWN
+app.config['SECRET_KEY'] = SOCKET_IO_SECRET #CHANGE TO YOUR OWN
 socketio = SocketIO(app)
 
 def messageReceived(methods=['GET', 'POST']):
